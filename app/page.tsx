@@ -11,6 +11,7 @@ export default async function Home() {
     return <p>Error loading clients</p>;
   }
 
+  
   return (
     <div className="">
       <main className="">
