@@ -24,14 +24,6 @@ export default function ClientesPageClient({clientes}) {
 
         const formData = new FormData(e.target);
 
-        const data = {
-            nombre: formData.get("nombre"),
-            telefono: formData.get("telefono"),
-            email: formData.get("email"),
-            direccion: formData.get("direccion"),
-            notas: formData.get("notas")
-        }
-
         setFormError("");
 
         const telefono = formData.get("telefono");
@@ -49,13 +41,20 @@ export default function ClientesPageClient({clientes}) {
         return;
         }
 
+        const data = {
+            nombre: formData.get("nombre"),
+            telefono: formData.get("telefono"),
+            email: formData.get("email"),
+            direccion: formData.get("direccion"),
+            notas: formData.get("notas")
+        }
+
         try {
             const nuevoCliente = await crearNuevoCliente(data)
-            router.push(`/dashboard/clientes/${nuevoCliente.id}`)
             setIsModalOpen(false)
-            e.target.reset();
+            router.push(`/dashboard/clientes/${nuevoCliente.id}`)
         } catch (error) {
-            alert(error.message || "Error al guardar al cliente");
+            setFormError("Error al guardar al cliente.");
         } finally {
             setIsSubmitting(false);
         }
@@ -66,14 +65,14 @@ export default function ClientesPageClient({clientes}) {
     }
 
     return (
-        <section className="p-6 md:p-5">
-            <div className="mb-8 flex flex-col md:flex-row md:justify-between md:items-center">
+        <section className="fade-in-up">
+            <div className="mb-8 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
                 <div>
-                    <h1 className="text-2xl font-semibold text-gray-800">
+                    <h1 className="text-3xl font-bold text-gray-900">
                         Clientes
                     </h1>
-                    <p className="text-gray-500 mt-1">
-                        Listado general de clientes registrados.
+                    <p className="text-gray-600 mt-2">
+                        Gestiona y administra tu base de clientes
                     </p>
                 </div>
 
@@ -87,7 +86,7 @@ export default function ClientesPageClient({clientes}) {
 
             <ClientesTabla clientes={clientes || []}/>
 
-            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} titulo={"Registrar Cliente"} mensaje={"Agrega la información completa del cliente."}>
+            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} titulo={"Registrar Nuevo Cliente"} mensaje={"Completa la información del cliente para agregarlo al sistema."}>
                 <FormularioNuevoCliente 
                     onSubmit={handleSubmit} 
                     isSubmitting={isSubmitting} 

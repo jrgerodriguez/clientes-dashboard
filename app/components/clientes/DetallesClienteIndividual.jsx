@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link";
-import { FiChevronLeft, FiEdit } from 'react-icons/fi'
+import { FiChevronLeft, FiEdit, FiMail, FiPhone, FiMapPin, FiFileText } from 'react-icons/fi'
 import { FaWhatsapp } from "react-icons/fa";
 import { useState } from "react";
 import EditarClienteFormulario from "./EditarClienteFormulario";
@@ -65,88 +65,119 @@ export default function DetallesClienteIndividual({cliente}) {
     }
 
   return (
-    <section className="font-sans">
+    <section className="fade-in-up">
       <Link
         href="/dashboard/clientes"
-        className="flex items-center gap-1 text-blue-600 hover:text-blue-800 hover:underline transition-colors leading-none text-md"
+        className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-medium transition-colors mb-6"
       >
-      <FiChevronLeft
-        size={25}
-        strokeWidth={1.7}
-        className="block translate-y-px"
-      />
-
-        <span>Clientes</span>
+        <FiChevronLeft size={20} />
+        <span>Volver a Clientes</span>
       </Link>
 
-      <div className="bg-white rounded-xl border border-gray-200 max-h-140 overflow-y-auto p-6 mt-6 flex gap-6 shadow-sm">
-        <div className="flex-1 flex flex-col items-start justify-center">
-          <h2 className="text-2xl font-bold text-gray-700 leading-tight">
-            {cliente.nombre_completo}
-          </h2>
-        </div>
+      {/* Header con nombre y acciones */}
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-6">
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              {cliente.nombre_completo}
+            </h1>
+            <p className="text-gray-600">Información detallada del cliente</p>
+          </div>
 
-        <div className="flex-1 flex flex-col">
-          <p className="text-gray-500 font-semibold uppercase text-xs tracking-wide">
-            Email
-          </p>
-          <p className="text-base text-gray-700 break-all">
-            {cliente.email}
-          </p>
-
-          <p className="mt-4 text-gray-500 font-semibold uppercase text-xs tracking-wide">
-            Teléfono
-          </p>
-          <p className="text-base text-gray-700">
-            {cliente.telefono}
-          </p>
-
-          <p className="mt-4 text-gray-500 font-semibold uppercase text-xs tracking-wide">
-            Dirección
-          </p>
-          <p className="text-base text-gray-700 leading-snug">
-            {cliente.direccion}
-          </p>
-        </div>
-
-        <div className="flex-1">
-          <p className="text-gray-500 font-semibold uppercase text-xs tracking-wide mb-1">
-            Notas
-          </p>
-          <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
-            {cliente.notas || "—"}
-          </p>
-        </div>
-
-        <div className="flex-1">
-          <p className="text-gray-500 font-semibold uppercase text-xs tracking-wide mb-1">
-            Acciones
-          </p>
-
-          <div className="flex gap-3 items-center ">
+          <div className="flex gap-3">
             <a
               href={`https://wa.me/503${cliente.telefono}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center w-8 h-8 rounded-full bg-green-500 text-white hover:bg-green-600 transition-colors shadow-sm cursor-pointer"
+              className="flex items-center justify-center w-11 h-11 rounded-lg bg-green-500 text-white hover:bg-green-600 transition-colors shadow-md"
               title="Contactar por WhatsApp"
             >
-              <FaWhatsapp className="text-lg" />
+              <FaWhatsapp size={22} />
             </a>
 
             <button
-            onClick={() => setEditOpen(true)}
-            className="text-gray-600 hover:bg-gray-100 cursor-pointer"
-            type="button"
+              onClick={() => setEditOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors font-medium"
+              type="button"
             >
-            <FiEdit size={25} />
+              <FiEdit size={20} />
+              Editar
             </button>
           </div>
-
         </div>
       </div>
 
-      {/* ------ Slider de edicion ------ */}
+      {/* Grid de información */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        {/* Información de contacto */}
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+          <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
+              <FiPhone className="text-green-600" size={18} />
+            </div>
+            Información de Contacto
+          </h2>
+
+          <div className="space-y-4">
+            <div>
+              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1">
+                Teléfono
+              </label>
+              <p className="text-base text-gray-900 font-medium">
+                {cliente.telefono || "—"}
+              </p>
+            </div>
+
+            <div>
+              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1">
+                Email
+              </label>
+              <p className="text-base text-gray-900 font-medium break-all">
+                {cliente.email || "—"}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Dirección */}
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+          <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+              <FiMapPin className="text-blue-600" size={18} />
+            </div>
+            Dirección
+          </h2>
+
+          <div>
+            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1">
+              Ubicación
+            </label>
+            <p className="text-base text-gray-900 leading-relaxed">
+              {cliente.direccion || "—"}
+            </p>
+          </div>
+        </div>
+
+        {/* Notas - ocupa todo el ancho */}
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 lg:col-span-2">
+          <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center">
+              <FiFileText className="text-purple-600" size={18} />
+            </div>
+            Notas Adicionales
+          </h2>
+
+          <div>
+            <p className="text-base text-gray-700 leading-relaxed whitespace-pre-line">
+              {cliente.notas || "No hay notas adicionales para este cliente."}
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      {/* Slider de edición */}
       <EditarClienteFormulario 
         editOpen={editOpen} 
         setEditOpen={setEditOpen} 

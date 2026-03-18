@@ -3,17 +3,18 @@ import { obtenerClientePorId } from "@/lib/clientes";
 import DetallesClienteIndividual from "../../../components/clientes/DetallesClienteIndividual";
 
 export default async function IndividualClientPage({params}) {
-  
   const { id } = await params
-  const cliente = await obtenerClientePorId(id)
 
-  if(!cliente) {
-    notFound();
+  let cliente;
+  try {
+    cliente = await obtenerClientePorId(id)
+  } catch (error) {
+    throw error 
   }
 
-  return (  
-    <>
-      <DetallesClienteIndividual cliente={cliente}/>
-    </>
-  )
+  if (!cliente) {
+    notFound() 
+  }
+
+  return <DetallesClienteIndividual cliente={cliente} />
 }
