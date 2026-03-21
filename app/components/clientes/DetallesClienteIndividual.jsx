@@ -7,9 +7,10 @@ import { useState } from "react";
 import EditarClienteFormulario from "./EditarClienteFormulario";
 import { useParams, useRouter } from "next/navigation";
 import { editarCliente } from "@/lib/clientes";
+import CitasClienteIndividual from "./CitasClienteIndividual";
 
 
-export default function DetallesClienteIndividual({cliente}) {
+export default function DetallesClienteIndividual({cliente, citas}) {
 
   const [editOpen, setEditOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -175,6 +176,9 @@ export default function DetallesClienteIndividual({cliente}) {
           </div>
         </div>
 
+        {/* Apartado de citas individuales */}
+        <CitasClienteIndividual citas={citas} />
+
       </div>
 
       {/* Slider de edición */}
@@ -187,6 +191,7 @@ export default function DetallesClienteIndividual({cliente}) {
         onChange={borrarError}
         isSubmitting={isSubmitting} 
       />
+      
 
     </section>
   )
