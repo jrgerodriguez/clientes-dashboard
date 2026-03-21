@@ -1,12 +1,12 @@
 'use client'
 
 import Link from "next/link"
-import { FiChevronLeft, FiEdit, FiMail, FiPhone, FiMapPin, FiFileText } from 'react-icons/fi'
+import { FiChevronLeft, FiEdit, FiMail, FiPhone, FiMapPin, FiFileText, FiTrash2 } from 'react-icons/fi'
 import { FaWhatsapp } from "react-icons/fa"
 import { useState } from "react"
 import EditarClienteFormulario from "./EditarClienteFormulario"
 import { useParams, useRouter } from "next/navigation"
-import { editarCliente } from "@/lib/clientes"
+import { editarCliente, eliminarClientePorId } from "@/lib/clientes"
 import CitasClienteIndividual from "./CitasClienteIndividual"
 
 export default function DetallesClienteIndividual({ cliente, citas }) {
@@ -31,7 +31,7 @@ export default function DetallesClienteIndividual({ cliente, citas }) {
     const telefono = formData.get("telefono")
     const email    = formData.get("email")
     if (telefono && !/^\d{8}$/.test(telefono)) {
-      setFormError("Número de teléfono no válido.")
+      setFormError("Número de teléfono no válido o el formato es incorrecto.")
       setIsSubmitting(false)
       return
     }
@@ -58,6 +58,15 @@ export default function DetallesClienteIndividual({ cliente, citas }) {
     .map(n => n[0])
     .join('')
     .toUpperCase()
+
+    async function handleDelete() {
+      try {
+        await eliminarClientePorId(cliente.id)
+        router.push('/dashboard/clientes')
+      } catch (error) {
+        alert("Error al eliminar el cliente")
+      }
+    }
 
   return (
     <section className="fade-in-up space-y-6">
@@ -86,26 +95,37 @@ export default function DetallesClienteIndividual({ cliente, citas }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <a
-              href={`https://wa.me/503${cliente.telefono}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-700 transition-colors shadow-sm"
-              title="Contactar por WhatsApp"
-            >
-              <FaWhatsapp size={16} />
-              WhatsApp
-            </a>
-            <button
-              onClick={() => setEditOpen(true)}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 bg-white text-slate-700 text-xs font-semibold hover:bg-slate-50 transition-colors"
-              type="button"
-            >
-              <FiEdit size={15} />
-              Editar
-            </button>
-          </div>
+        <div className="flex items-center gap-2">
+          <a
+            href={`https://wa.me/503${cliente.telefono}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-700 transition-colors shadow-sm"
+          >
+            <FaWhatsapp size={16} />
+            WhatsApp
+          </a>
+
+          <button
+            onClick={() => setEditOpen(true)}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 bg-white text-slate-700 text-xs font-semibold hover:bg-slate-50 transition-colors"
+            type="button"
+          >
+            <FiEdit size={15} />
+            Editar
+          </button>
+
+          <div className="w-px h-6 bg-slate-200 mx-1" />
+
+          <button
+            onClick={handleDelete}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-red-200 bg-red-50 text-red-600 text-xs font-semibold hover:bg-red-100 transition-colors"
+            type="button"
+          >
+            <FiTrash2 size={15} />
+          </button>
+        </div>
+          
         </div>
       </div>
 
@@ -154,9 +174,12 @@ export default function DetallesClienteIndividual({ cliente, citas }) {
             </div>
             Notas Adicionales
           </h2>
-          <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-line">
-            {cliente.notas || 'No hay notas adicionales para este cliente.'}
-          </p>
+          
+          {cliente.notas ? (
+            <p>{cliente.notas}</p>
+          ) : (
+            <p className="text-sm text-slate-400" >No hay notas adicionales para este cliente</p>
+          )}
         </div>
 
         {/* Citas */}
