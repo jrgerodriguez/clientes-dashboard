@@ -1,6 +1,12 @@
+'use client'
+
 import { FiCalendar, FiClock, FiPlus, FiEdit, FiCreditCard, FiDollarSign, FiRepeat, FiTrash2 } from 'react-icons/fi'
+import { useState } from 'react'
+import Modal from '../ui/Modal'
 
 const CitasClienteIndividual = ({ citas }) => {
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const formatearFecha = (fecha) => {
     return new Date(fecha + 'T00:00:00').toLocaleDateString('es-SV', {
@@ -39,7 +45,10 @@ const CitasClienteIndividual = ({ citas }) => {
           </div>
           Citas
         </h2>
-        <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors shadow-sm">
+        <button
+          className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors shadow-sm"
+          onClick={() => setIsModalOpen(true)}
+        >
           <FiPlus size={14} />
           Nueva Cita
         </button>
@@ -65,28 +74,22 @@ const CitasClienteIndividual = ({ citas }) => {
             return (
               <div
                 key={cita.id}
-                className="flex items-center justify-between px-4 py-3 rounded-xl border border-slate-100 hover:border-slate-200 hover:bg-slate-50/60 transition-all duration-150 group"
+                className="flex flex-col gap-3 px-4 py-3 rounded-xl border border-slate-100 hover:border-slate-200 hover:bg-slate-50/60 transition-all duration-150"
               >
-                {/* Mini-calendario + info */}
-                <div className="flex items-center gap-4">
+                {/* Fila superior: fecha + info + costo + estado + acciones */}
 
-                  {/* Badge de fecha con Dia, Mes y Año */}
-                  <div className={`flex flex-col items-center justify-center w-14 h-14 rounded-xl shrink-0 border py-1.5
-                    ${completado ? 'bg-emerald-50 border-emerald-200' : 'bg-blue-50 border-blue-200'}`}
-                  >
-                    <span className={`text-[9px] font-bold uppercase tracking-tight ${completado ? 'text-emerald-500' : 'text-blue-400'}`}>
-                      {mes}
-                    </span>
-                    <span className={`text-lg font-bold leading-none my-0.5 ${completado ? 'text-emerald-700' : 'text-blue-700'}`}>
-                      {dia}
-                    </span>
-                    <span className={`text-[8px] font-semibold ${completado ? 'text-emerald-400' : 'text-blue-300'}`}>
-                      {anio}
-                    </span>
-                  </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    {/* Badge fecha */}
+                    <div className={`flex flex-col items-center justify-center w-14 h-14 rounded-xl shrink-0 border py-1.5
+                      ${completado ? 'bg-emerald-50 border-emerald-200' : 'bg-blue-50 border-blue-200'}`}
+                    >
+                      <span className={`text-[9px] font-bold uppercase tracking-tight ${completado ? 'text-emerald-500' : 'text-blue-400'}`}>{mes}</span>
+                      <span className={`text-lg font-bold leading-none my-0.5 ${completado ? 'text-emerald-700' : 'text-blue-700'}`}>{dia}</span>
+                      <span className={`text-[8px] font-semibold ${completado ? 'text-emerald-400' : 'text-blue-300'}`}>{anio}</span>
+                    </div>
 
-                  {/* Info */}
-                  <div>
+                    {/* Hora + duración + método */}
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="flex items-center gap-1.5 text-sm font-bold text-slate-800">
                         <FiClock size={12} className="text-slate-400" />
@@ -106,41 +109,44 @@ const CitasClienteIndividual = ({ citas }) => {
                         </>
                       )}
                     </div>
-                    {cita.notas && (
-                      <p className="text-xs text-slate-400 mt-1.5 line-clamp-1">{cita.notas}</p>
+                  </div>
+
+                  {/* Derecha: costo + estado + acciones */}
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    {cita.costo && (
+                      <span className="text-sm font-bold text-slate-800 mr-1">
+                        ${parseFloat(cita.costo).toFixed(2)}
+                      </span>
                     )}
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${estadoBadge(cita.estado)} mr-1`}>
+                      {cita.estado}
+                    </span>
+                    <button type="button" title="Editar cita"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all">
+                      <FiEdit size={14} />
+                    </button>
+                    <button type="button" title="Eliminar cita"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-all">
+                      <FiTrash2 size={14} />
+                    </button>
                   </div>
                 </div>
 
-                {/* Acciones: Editar + Eliminar */}
-                <div className="flex items-center gap-1.5 shrink-0">
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${estadoBadge(cita.estado)} mr-1`}>
-                    {cita.estado}
-                  </span>
-
-                  {/* Botón Editar */}
-                  <button
-                    type="button"
-                    title="Editar cita"
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all duration-150"
-                  >
-                    <FiEdit size={14} />
-                  </button>
-
-                  {/* Botón Eliminar */}
-                  <button
-                    type="button"
-                    title="Eliminar cita"
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-all duration-150"
-                  >
-                    <FiTrash2 size={14} />
-                  </button>
-                </div>
+                {/* Fila inferior: notas */}
+                {cita.notas && (
+                  <div className="ml-18 pl-4 border-l-2 border-slate-100">
+                    <p className="text-xs text-slate-400 leading-relaxed">{cita.notas}</p>
+                  </div>
+                )}
               </div>
             )
           })}
         </div>
       )}
+
+      {/* Agregar Cita */}
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} titulo={`Agregar Nueva Cita`} mensaje={"Completa la información para agregar una nueva cita a este cliente."}>
+      </Modal>
     </div>
   )
 }

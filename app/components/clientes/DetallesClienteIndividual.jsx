@@ -181,7 +181,7 @@ export default function DetallesClienteIndividual({ cliente, citas }) {
           </h2>
           
           {cliente.notas ? (
-            <p>{cliente.notas}</p>
+            <p className="text-sm text-slate-900 leading-relaxed">{cliente.notas}</p>
           ) : (
             <p className="text-sm text-slate-400" >No hay notas adicionales para este cliente</p>
           )}
