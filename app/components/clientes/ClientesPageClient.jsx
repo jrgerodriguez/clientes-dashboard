@@ -1,8 +1,8 @@
 
 'use client'
 
-import ClientesTabla from "../../components/clientes/ClientesTabla"
-import BotonAccion from "../../components/ui/BotonAccion";
+import ClientesTabla from "./ClientesTabla"
+import BotonAccion from "../ui/BotonAccion";
 import { FiUserPlus  } from "react-icons/fi";
 import { useState } from "react";
 import Modal from "../ui/Modal";

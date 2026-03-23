@@ -8,14 +8,18 @@ import EditarClienteFormulario from "./EditarClienteFormulario"
 import { useParams, useRouter } from "next/navigation"
 import { editarCliente, eliminarClientePorId } from "@/lib/clientes"
 import CitasClienteIndividual from "./CitasClienteIndividual"
+import Modal from "../ui/Modal"
+import EliminarClienteModal from "./EliminarClienteModal"
 
 export default function DetallesClienteIndividual({ cliente, citas }) {
-  const [editOpen, setEditOpen]       = useState(false)
+  const [editOpen, setEditOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formError, setFormError]     = useState("")
   const router = useRouter()
   const { id } = useParams()
 
+  // Manejar la funcion de editar
   async function handleSubmit(e) {
     e.preventDefault()
     setIsSubmitting(true)
@@ -59,6 +63,7 @@ export default function DetallesClienteIndividual({ cliente, citas }) {
     .join('')
     .toUpperCase()
 
+  // Manejar el delete
     async function handleDelete() {
       try {
         await eliminarClientePorId(cliente.id)
@@ -118,7 +123,7 @@ export default function DetallesClienteIndividual({ cliente, citas }) {
           <div className="w-px h-6 bg-slate-200 mx-1" />
 
           <button
-            onClick={handleDelete}
+            onClick={() => setIsModalOpen(true)}
             className="flex items-center gap-2 px-3 py-2 rounded-lg border border-red-200 bg-red-50 text-red-600 text-xs font-semibold hover:bg-red-100 transition-colors"
             type="button"
           >
@@ -196,6 +201,15 @@ export default function DetallesClienteIndividual({ cliente, citas }) {
         onChange={() => setFormError("")}
         isSubmitting={isSubmitting}
       />
+
+      {/* Eliminar Cliente */}
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} titulo={`Eliminar Cliente`} mensaje={"Confirmar acción."}>
+          <EliminarClienteModal
+            onClose={() => setIsModalOpen(false)}
+            onConfirm={handleDelete}
+            nombre={cliente.nombre_completo}
+          />
+        </Modal>
     </section>
   )
 }
